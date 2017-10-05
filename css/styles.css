@@ -1,0 +1,147 @@
+html {
+    overflow-x:hidden;
+}
+
+.form-group {
+    width: 100%;
+}
+
+#menubar {
+    margin-bottom: 20px;
+}
+
+.panel-title a:hover, .panel-title a:focus {
+    color: #0000cc;
+}
+
+.nav-pills a {
+    color: black;
+}
+
+.navbar-default .navbar-brand, navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover, #clear {
+    color: #3f5796;
+}
+
+.navbar-form .input-group .input-group-btn {
+    width: 1%;
+}
+
+.navbar {
+    margin: 0px -15px;
+}
+
+.navbar > ol > li > a{
+  margin-right:30px;
+}
+
+#clear {
+    color: #3f5796;
+    border-color: #3f5796;
+}
+
+#detailpage, #itempage {
+    position:relative;
+}
+
+#progress {
+    margin-top: 100px;
+}
+
+#favbutton {
+    margin-right: 20px;
+}
+
+#tabs {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #3f5796;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+ .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+    color: #fff;
+    background-color: #3f5894;
+    border-radius: 0;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active {
+    color: #fff;
+    background-color: #3f5894;
+    border-color: #2e6da4;
+}
+
+.btn, .form-control  {
+    border-radius: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+.yellow {
+    color:#ffd700;
+}
+
+.posts {
+    margin:10px;
+}
+
+.username, .time {
+    font-size: 90%;
+}
+
+.progress-bar-striped {
+    width: 60%;
+}
+
+.time {
+    color: #a3a3a3;
+}
+
+.propic {
+    min-height: 40px;
+    min-width: 40px;
+}
+
+.message {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.animate-left-right, .animate-right-left {
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s;
+  opacity:1;
+  position: absolute;
+  left: 0;
+}
+
+.animate-left-right.ng-hide {
+  left: -100%;
+  opacity:0;
+}
+
+.animate-right-left.ng-hide {
+  left: 100%;
+  opacity:0;
+}
+
+@media (min-width: 768px) {
+    #search {
+        width: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav>li>a {
+        position: relative;
+        display: block;
+        padding: 0px 0px;
+    }
+}
+
+.pagination > li > a, .pagination > li > a:active, .pagination > li > a:hover {
+    color: black;
+    border-color: black;
+    border-radius: 5px;
+    background: none;
+}

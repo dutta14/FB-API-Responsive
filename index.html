@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Facebook API</title>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>  <!--angular load-->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-animate.min.js"></script> <!-- angular animate load -->
+        <script src="js/controllers.js"></script>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">  <!-- bootstrap css load -->
+        
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    
+    <body>
+        <script>
+          window.fbAsyncInit = function() {
+            FB.init({
+              appId      : '290482974718709',
+              xfbml      : true,
+              version    : 'v2.8'
+            });
+            FB.AppEvents.logPageView();
+          };
+
+          (function(d, s, id){
+             var js, fjs = d.getElementsByTagName(s)[0];
+             if (d.getElementById(id)) {return;}
+             js = d.createElement(s); js.id = id;
+             js.src = "//connect.facebook.net/en_US/sdk.js";
+             fjs.parentNode.insertBefore(js, fjs);
+           }(document, 'script', 'facebook-jssdk'));
+        </script>
+        
+        
+        <div ng-controller="MyController">
+            
+            <div class="container-fluid">
+                <nav class="navbar navbar-default">
+                    <section class="row">
+                        <section class="col-xs-12 col-sm-3">
+                            <div class="navbar-header">
+                                <a href="" class="navbar-brand">FB Search</a>
+                            </div>
+                        </section>
+
+                        <section class="container-fluid">
+                            <section class="col-xs-12 col-sm-7">
+                               <form class="navbar-form" role="search">
+                                   <section class="row">
+                                       <section class="form-group">
+                                           <section class="col-xs-9 col-sm-10">
+                                               <div class="input-group">
+                                                        <input name="search" id="searchbox" type="search" class="form-control" placeholder="type something..."
+                                                                data-toggle="tooltip" data-placement="bottom" title="Please type a keyword" ng-focus = "removett()">
+                                                        <span class="input-group-btn">
+                                                            <button id="search" class="btn btn-primary" ng-click="firstpage()"><span class="glyphicon glyphicon-search"></span></button>
+                                                        </span>
+                                               </div>
+                                            </section>
+                                            <section class="col-xs-3 col-sm-2">
+                                                <button id="clear" class="btn btn-default" ng-click="clear()">Clear</button>
+                                            </section>
+                                        </section>
+                                    </section>
+                               </form>
+                            </section>
+                        </section>
+                    </section>
+                </nav>
+            
+                    <div class="row">
+                        <section id="tabs" class="col-xs-12">
+                        <ul class="nav nav-pills nav-justified nav-stacked">
+                            <li value='user' class="active" ng-click = "loadtab()"><a>Users</a></li>
+                            <li value='page' ng-click = "loadtab()"><a>Pages</a></li>
+                            <li value='event' ng-click = "loadtab()"><a>Events</a></li>
+                            <li value='place' ng-click = "loadtab()"><a>Places</a></li>
+                            <li value='group' ng-click = "loadtab()"><a>Groups</a></li>
+                            <li value='fav' ng-click = "loadtab()"><a>Favorites</a></li>
+                        </ul>
+                        </section>
+                    </div>
+                    
+                    <div class="clearable container-fluid">
+                        <div id="itempage" class="table-responsive animate-right-left" ng-hide="myValue2">
+                            <div class="container-fluid">
+                                <div id="progress" class="progress">
+                                    <div class="progress-bar progress-bar-striped active" role="progressbar">
+                                        <span class="sr-only">60% Complete</span>
+                                    </div>
+                                </div>
+
+                                <table class="table table-hover">
+                                    <thead>
+                                        <th ng-class="makevisible();">#</th>
+                                        <th>Profile photo</th>
+                                        <th>Name</th>
+                                        <th class="favcol" ng-hide="notfav()">Type</th>
+                                        <th>Favorite</th>
+                                        <th>Details</th>
+                                    </thead>
+
+                                    <tr ng-repeat="item in artists">
+                                        <td> <b>{{$index+1}} </b></td>
+                                        <td> <img ng-src="{{item.picture.data.url}}" height='40' width='40' class="img-responsive img-circle">  </td>
+                                        <td> {{item.name}} </td>
+                                        <td class="favcol" ng-hide="notfav()"> {{item.type}}</td>
+                                        <td> <button class="btn btn-default" width='20' height='20' ng-click="favorites(item)">
+                                                 <span ng-class="findclass(item.id)"></span>
+                                            </button>
+                                        </td>
+                                        <td> <button class="btn btn-default" width='20' height='20' ng-click="showdetails(item)">
+                                                 <span class="glyphicon glyphicon-chevron-right"></span> 
+                                             </button> 
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <nav class="navbar text-center">
+                                   <ol class="pagination">
+                                        <li id="prev" class="previous" ng-click="prevpage();">
+                                           <a>Previous</a>
+                                        </li>
+                                        <li  id="next" class="next" ng-click="nextpage();">
+                                           <a>Next</a>
+                                        </li>
+                                    </ol>
+                                </nav>
+                            </div>
+                         </div>
+                        
+                         <div id="detailpage" class="animate-left-right" ng-hide="myValue">
+                             <div class="row">
+                                <section id="menubar" class="col-xs-12">
+                                    <div class="row">
+                                       <section class="col-xs-6 col-sm-8">
+                                            <button class="btn btn-default" ng-click="goback()"> 
+                                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                                Back 
+                                            </button>
+                                        </section>
+                                        <section class="col-xs-6 col-sm-4 share text-right">
+                                            <button id="favbutton" class="btn btn-default" width='20' height='20' ng-click="favorites(currentitem)">
+                                                <span ng-class="findclass(currentid)"></span>
+                                            </button>
+                                            <button class="btn btn-default" ng-click="share()"> <img src="http://cs-server.usc.edu:45678/hw/hw8/images/facebook.png" class="img-responsive" width="25" height="25"> </button>
+                                        </section>
+                                    </div>
+                                </section>
+                             </div>
+                             <div class="row">
+                                 <section class="col-xs-12 col-sm-6">
+                                     <div class="panel panel-default">
+                                         <div class="panel-heading">Albums</div>
+                                          <div class="panel-body">
+                                             <div class="progress detprog">
+                                                <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 60%;">
+                                                    <span class="sr-only">60% Complete</span>
+                                                </div>
+                                             </div>
+                                            <div class="panel-group" id="albums">
+                                                <div class="panel panel-default album" ng-repeat="item in albums">
+                                                    <div class="panel-heading">
+                                                        <div class="panel-title">
+                                                           <a id="{{'link'+$index}}" class="collapsed" data-toggle="collapse" href="#{{'album'+$index}}" data-parent="#albums">  {{item.name}} </a>
+                                                        </div>
+                                                    </div>
+                                                    <div id ="{{'album'+$index}}" class="panel-collapse collapse {{$first? 'in': ''}}">
+                                                        <div class="panel-body">
+                                                            <div id="{{'fbpics'+$index}}" ng-class="picturebox">
+                                                                <div class="thumbnail" ng-repeat="photo in item.photos.data">
+                                                                   <img id="{{photo.id}}" ng-src="{{getpicture(photo.id)}}" class="img-responsive img-rounded">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                           </div>
+
+                                           <div id="no_album" class="alert alert-warning"> No data found. </div>
+                                         </div>
+                                     </div>
+                                 </section> 
+
+                                 <section class="col-xs-12 col-sm-6">
+                                     <div class="panel panel-default ">
+                                        <div class="panel-heading">Posts</div>
+                                        <div class="panel-body">
+                                            <div class="progress detprog">
+                                                <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 60%;">
+                                                    <span class="sr-only">60% Complete</span>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-default post" ng-repeat="item in posts">
+                                                <div class= "posts">
+                                                        <div class="row">
+                                                            <section class="col-xs-3 col-md-2 col-lg-1"> 
+                                                                    <img ng-src="{{currentitem.picture.data.url}}" height="50" width="50" class="propic img-responsive">
+                                                                </section>
+                                                            
+                                                            <section class="col-xs-9 col-md-10 col-lg-11">
+                                                                  <div class="row">
+                                                                    <div class="username"><b>{{currentitem.name}}</b></div>
+                                                                    <div class="time">{{formattime(item.created_time)}} </div> 
+                                                                   </div>
+                                                            </section>
+                                                            
+                                                            <section class="col-xs-12"> 
+                                                                <div class="message">{{item.message? item.message : item.story? item.story : ""}}</div>
+                                                            </section>
+                                                       </div>
+                                                </div>
+                                            </div>
+                                            <div id="no_post" class="alert alert-warning"> No data found. </div>
+                                         </div>
+                                    </div>
+                                 </section>
+                             </div>
+                        </div>
+                    </div>
+                </div> 
+         </div>
+        
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> <!-- jquery load -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> <!-- bootstrap js load -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+        <noscript/>
+    </body>
+</html>
